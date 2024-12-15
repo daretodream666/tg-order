@@ -1,7 +1,7 @@
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from aiogram import Router, F, Bot
-from aiogram.filters import CommandStart, StateFilter
+from aiogram.filters import CommandStart, StateFilter, Command
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 
 from config import API_TOKEN
@@ -10,7 +10,7 @@ bot = Bot(API_TOKEN)
 
 import keyboards.keyboards as kb
 
-from database import find_teachers, add_pupil, add_teacher, get_pupil_data
+from database import find_teachers, add_pupil, add_teacher, get_pupil_data, delete_forms_db
 
 router = Router()
 
@@ -94,7 +94,7 @@ async def ask_final(message: Message, state: FSMContext):
         await message.answer("К сожалению, мы не нашли подходящих помощников.")
 
     current_teacher_index = 0
-    await state.update_data(teachers=teachers, current_teacher_id=list(teachers.keys())[current_teacher_index])
+    await state.update_data(teachers=teachers, current_teacher_id=list(teachers.keys())[current_teacher_index], current_teacher_index=0)
     
     await send_teacher_card(message, state)
 
@@ -221,3 +221,10 @@ async def reject_student(callback: CallbackQuery, state: FSMContext):
 
     await bot.send_message(chat_id=student_id, text=f"Учитель отклонил вашу заявку.")
     await callback.message.edit_text("Вы отклонили заявку от ученика.", reply_markup=None)
+
+@router.message(Command("delete"))
+async def delete_forms(message: Message, state: FSMContext):
+    delete_forms_db(message.from_user.id)
+    await state.clear()
+
+    await message.answer("Вы удалили свои анкеты. Можете создать новую(-ые), написав команду /start.")

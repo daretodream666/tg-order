@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy import String, Integer
-from sqlalchemy import select, func
+from sqlalchemy import select, delete
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -107,3 +107,9 @@ def get_pupil_data(pupil_id: int):
         result = [pupil.name,pupil.year,pupil.faculty,pupil.subject,pupil.question]
 
         return result
+    
+def delete_forms_db(tg_id: int):
+    with Session(engine) as session:
+        session.execute(delete(Pupils).where(Pupils.id == tg_id))
+        session.execute(delete(Teachers).where(Teachers.id == tg_id))
+        session.execute()
