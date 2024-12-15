@@ -139,10 +139,10 @@ async def select_teacher(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     teachers = data['teachers']
     
-    selected_teacher = next(teacher for teacher in teachers if teacher['id'] == teacher_id) # INT OBJECT IS NOT SUBSCRIPTABLE. С ЭТОГО МОМЕНТА НИЧЕГО НЕ РАБОТАЕТ !!!!
+    teacher = teachers[teacher_id]
     
     await state.set_state(Ask.waiting)
-    await callback.message.answer(f"Отлично! Я отправил твою заявку. Как только {selected_teacher['name']} примет ее, я дам тебе знать!")
+    await callback.message.answer(f"Отлично! Я отправил твою заявку. Как только {teacher['name']} примет ее, я дам тебе знать!")
 
     response_kb = InlineKeyboardMarkup(inline_keyboard=[
         [
