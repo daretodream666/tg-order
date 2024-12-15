@@ -112,4 +112,4 @@ def delete_forms_db(tg_id: int):
     with Session(engine) as session:
         session.execute(delete(Pupils).where(Pupils.id == tg_id))
         session.execute(delete(Teachers).where(Teachers.id == tg_id))
-        session.execute()
+        session.commit()
