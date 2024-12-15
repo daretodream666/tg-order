@@ -1,1 +1,1 @@
-API_TOKEN = '7573511187:AAGDa810Q3Z-CWPIOOpzRcLo-4B0KliHeIY'
+API_TOKEN = 'bro what are you looking for?'
