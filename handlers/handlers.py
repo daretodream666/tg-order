@@ -43,6 +43,12 @@ async def start(message: Message, state: FSMContext):
     await state.clear()
     await message.answer('Привет! Я учебный помощник. Я помогу тебе найти поддержку в учебе или предложить свою помощь другим студентам.\nВыбери, что тебя интересует:', reply_markup=kb.main)
 
+@router.message(Command("delete"))
+async def delete_forms(message: Message, state: FSMContext):
+    delete_forms_db(message.from_user.id)
+    await state.clear()
+    await message.answer("Вы удалили свои анкеты. Можете создать новую(-ые), написав команду /start.")
+
 @router.callback_query(F.data == 'ask')
 async def ask_one(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
@@ -222,9 +228,3 @@ async def reject_student(callback: CallbackQuery, state: FSMContext):
     await bot.send_message(chat_id=student_id, text=f"Учитель отклонил вашу заявку.")
     await callback.message.edit_text("Вы отклонили заявку от ученика.", reply_markup=None)
 
-@router.message(Command("delete"))
-async def delete_forms(message: Message, state: FSMContext):
-    delete_forms_db(message.from_user.id)
-    await state.clear()
-
-    await message.answer("Вы удалили свои анкеты. Можете создать новую(-ые), написав команду /start.")
